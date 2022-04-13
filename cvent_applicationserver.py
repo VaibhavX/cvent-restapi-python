@@ -9,6 +9,7 @@ import pandas as pd
 import requests
 import json
 from botocore.errorfactory import ClientError
+from io import StringIO
 
 s3 = boto3.resource('s3')
 
@@ -67,7 +68,9 @@ def attendee_list(program_id):
     column_names = ["email", "first_name", "last_name", "organization", "job_title", "program_name"]
     df = pd.DataFrame(columns=column_names)
     
-    programs = pd.read_csv('LOCAL FILE PROGRAM LIST --- SUBSTITUITE FOR S3 FILE IF AVAILABLE')
+    s3_object = s3.Bucket('S3 BUCKET NAME').Object('S3 FILE NAME').get() #File Name here is the Program_List.csv stored in S3 bucket
+    file_content = s3_object['Body'].read().decode() #Decoded as String
+    programs = pd.read_csv(StringIO(file_content)
     
     for program_name in programs['Program List']:
    
