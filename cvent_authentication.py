@@ -10,11 +10,12 @@ import boto3
 from botocore.errorfactory import ClientError
 
 s3 = boto3.client('s3')
+client = boto3.client('ssm')
 
 sandbox_url = '''Enter CVENT TARGET URL HERE'''
 
-client_id ="""ENTER CLIENT ID"""
-client_secret ="""ENTER CLIENT SECRET"""
+client_id =(client.get_parameter(Name="CLIENT ID", WithDecryption=True))['Parameter']['Value']
+client_secret =(client.get_parameter(Name="CLIENT SECRET", WithDecryption=True))['Parameter']['Value']
 version = 'ea'
 userpass = client_id +':'+client_secret
 encoded_u = base64.b64encode(userpass.encode()).decode()
